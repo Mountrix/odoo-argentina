@@ -7,9 +7,16 @@
         <field name="priority" eval="30"/>
         <field name="inherit_id" ref="account.view_account_payment_form" />
         <field name="arch" type="xml">
-            <label for="payment_total" position="before">
+            <!-- Mountrix Odoo 19 patch: anchor on the payment_total wrapper
+                 div instead of the standalone <label for="payment_total"/>.
+                 In Odoo 19's combined-arch validation, the standalone label
+                 added by account_payment_pro is not always reachable from
+                 this inheritance level, breaking the original lookup. The
+                 wrapper div is in the same block and is always reachable
+                 when account_payment_pro applies. -->
+            <xpath expr="//div[@name='payment_total']" position="before">
                 <field name="withholdings_amount" string="Withholdings" invisible="is_internal_transfer or not use_payment_pro or country_code != 'AR'"/>
-            </label>
+            </xpath>
             <div name="to_pay_amount">
                 <button name="compute_to_pay_amount_for_check" icon="fa-refresh" title="A partir del importe del pago (campo Importe) + ajuste, se calculan las retenciones y el importe a pagar. Útil por ejemplo para pagos con cheques donde el importe Importe no lo podemos cambiar" type="object" invisible="is_internal_transfer or partner_type != 'supplier' or state not in ['draft'] or payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']" class="oe_inline oe_link"/>
             </div>
