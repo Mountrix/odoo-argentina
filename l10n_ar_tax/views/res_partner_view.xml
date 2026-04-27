@@ -33,11 +33,24 @@
                         </list>
                     </field>
                 </group>
+                <!-- Mountrix Odoo 19 patch:
+                     The original anchor `<group name="others_col_1">` is
+                     created by `l10n_ar_ux.view_partner_property_form`
+                     (inside its custom "Fiscal Data" page) and is no longer
+                     a core element. Odoo 19's combined-arch validation
+                     filters by `active=True` (see
+                     odoo/addons/base/models/ir_ui_view.py
+                     `_get_inheriting_views_domain`); on this staging DB the
+                     l10n_ar_ux contribution is not reaching the arch when
+                     l10n_ar_tax is validated, so `others_col_1` is missing.
+                     We move the `drei` field inside this stable xpath
+                     (anchored on `<page name="accounting">`, contributed by
+                     `account.view_partner_property_form`, a direct ancestor
+                     of `l10n_ar_withholding.view_partner_form`). -->
+                <group string="DREI">
+                    <field name="drei"/>
+                </group>
             </xpath>
-
-            <group name="others_col_1">
-                <field name="drei"/>
-            </group>
         </field>
     </record>
 
