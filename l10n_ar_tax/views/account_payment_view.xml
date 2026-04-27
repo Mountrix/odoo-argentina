@@ -7,19 +7,27 @@
         <field name="priority" eval="30"/>
         <field name="inherit_id" ref="account.view_account_payment_form" />
         <field name="arch" type="xml">
-            <!-- Mountrix Odoo 19 patch: anchor on the payment_total wrapper
-                 div instead of the standalone <label for="payment_total"/>.
-                 In Odoo 19's combined-arch validation, the standalone label
-                 added by account_payment_pro is not always reachable from
-                 this inheritance level, breaking the original lookup. The
-                 wrapper div is in the same block and is always reachable
-                 when account_payment_pro applies. -->
-            <xpath expr="//div[@name='payment_total']" position="before">
+            <!-- Mountrix Odoo 19 patch:
+                 The original anchors (<label for="payment_total"/> and
+                 <div name="payment_total"/>) live in the inherit chain of
+                 `account_payment_pro.view_account_payment_form`. In Odoo
+                 19, `_get_inheriting_views_domain` filters by `active=True`
+                 (see odoo/addons/base/models/ir_ui_view.py), and on this
+                 staging DB the account_payment_pro view ended up with
+                 `active=False` after a previous failed upgrade, so its
+                 contributions are absent from the combined arch when this
+                 view is validated.
+
+                 We re-anchor on `<div name="amount_div"/>` (declared by
+                 core Odoo in account/views/account_payment_view.xml), which
+                 always exists. The `compute_to_pay_amount_for_check` button
+                 originally lived inside `<div name="to_pay_amount"/>` (also
+                 added by account_payment_pro), so we're moving it next to
+                 `amount_div` until we can safely re-anchor it. -->
+            <xpath expr="//div[@name='amount_div']" position="after">
                 <field name="withholdings_amount" string="Withholdings" invisible="is_internal_transfer or not use_payment_pro or country_code != 'AR'"/>
-            </xpath>
-            <div name="to_pay_amount">
                 <button name="compute_to_pay_amount_for_check" icon="fa-refresh" title="A partir del importe del pago (campo Importe) + ajuste, se calculan las retenciones y el importe a pagar. Útil por ejemplo para pagos con cheques donde el importe Importe no lo podemos cambiar" type="object" invisible="is_internal_transfer or partner_type != 'supplier' or state not in ['draft'] or payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']" class="oe_inline oe_link"/>
-            </div>
+            </xpath>
 
             <page name="withholdings_page" position="attributes">
                 <attribute name="invisible">is_internal_transfer or country_code != 'AR' or use_payment_pro</attribute>
