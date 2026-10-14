@@ -4,9 +4,9 @@
         <t t-foreach="docs" position="before">
             <t t-set="payment_bundles" t-value="docs._get_payment_bundles()"/>
         </t>
-        <t t-call="account.report_payment_receipt_document" position="attributes">
-            <attribute name="t-call">#{ o._get_name_receipt_report('account.report_payment_receipt_document') }</attribute>
-        </t>
+        <xpath expr="//t[contains(@t-call, 'report_payment_receipt_document')]" position="attributes">
+            <attribute name="t-call">#{o._get_name_receipt_report('account.report_payment_receipt_document')}</attribute>
+        </xpath>
         <t t-set="lang" position="after">
             <t t-set="payment_bundle" t-value="o._select_bundle(payment_bundles)"/>
         </t>
