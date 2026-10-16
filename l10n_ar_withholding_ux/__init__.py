@@ -1,3 +1,4 @@
+from .hooks import pre_init_hook
 from . import models
 
 from odoo.addons.l10n_ar_withholding.models.account_payment import AccountPayment

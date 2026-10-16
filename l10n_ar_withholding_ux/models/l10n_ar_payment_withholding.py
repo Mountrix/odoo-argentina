@@ -13,6 +13,15 @@ class l10nArPaymentRegisterWithholding(models.Model):
     ref = fields.Char()
     tax_id = fields.Many2one('account.tax', check_company=True, required=True)
     withholding_sequence_id = fields.Many2one(related='tax_id.l10n_ar_withholding_sequence_id')
+    partner_type = fields.Selection(related='payment_id.partner_type')
+    l10n_ar_tax_type = fields.Selection(
+        [
+            ('earnings', 'Ganancias'),
+            ('earnings_scale', 'Ganancias escala'),
+            ('iibb_untaxed', 'IIBB no gravado'),
+            ('iibb_total', 'IIBB total'),
+        ],
+    )
     # base_amount = fields.Monetary(compute='_compute_base_amount', store=True, readonly=False,
     #                               required=True)
     base_amount = fields.Monetary(required=True)
