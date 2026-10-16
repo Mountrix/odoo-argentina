@@ -40,6 +40,15 @@ class l10nArPaymentRegisterWithholding(models.Model):
         "El impuesto de retención debe ser único por pago",
     )
 
+    def action_l10n_ar_payment_withholding_tree(self):
+        return {
+            "name": "Previous Withholdings",
+            "type": "ir.actions.act_window",
+            "res_model": "l10n_ar.payment.withholding",
+            "view_mode": "list",
+            "domain": [("id", "in", self.ids)],
+        }
+
     # def _compute_base_amount(self):
 
     def _tax_compute_all_helper(self):
