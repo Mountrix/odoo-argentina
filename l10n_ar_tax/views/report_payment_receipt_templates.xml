@@ -1,15 +1,21 @@
 <odoo>
 
     <template id="report_payment_receipt" inherit_id="account.report_payment_receipt">
-        <t t-foreach="docs" position="before">
-            <t t-set="payment_bundles" t-value="docs._get_payment_bundles()"/>
-        </t>
-        <xpath expr="//t[contains(@t-call, 'report_payment_receipt_document')]" position="attributes">
-            <attribute name="t-call">#{o._get_name_receipt_report('account.report_payment_receipt_document')}</attribute>
+        <xpath expr="//t[@t-call='web.html_container']" position="replace">
+            <t t-call="web.html_container">
+                <t t-set="payment_bundles" t-value="docs._get_payment_bundles()"/>
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.partner_id.lang or o.company_id.partner_id.lang"/>
+                    <t t-set="payment_bundle" t-value="o._select_bundle(payment_bundles)"/>
+                    <t t-if="o._get_name_receipt_report('account.report_payment_receipt_document') == 'l10n_ar_tax.report_payment_receipt_document'"
+                       t-call="l10n_ar_tax.report_payment_receipt_document"
+                       t-lang="lang"/>
+                    <t t-else=""
+                       t-call="account.report_payment_receipt_document"
+                       t-lang="lang"/>
+                </t>
+            </t>
         </xpath>
-        <t t-set="lang" position="after">
-            <t t-set="payment_bundle" t-value="o._select_bundle(payment_bundles)"/>
-        </t>
     </template>
 
     <!-- we force priority greater than 16 so that it dont break inheritance of report_saleorder_document_inherit_sale_stock. with this we are loosing the incoterm field added but that sale_stock view -->

@@ -21,7 +21,7 @@ class ResCompanyJurisdictionPadron(models.Model):
     )
     jurisdiction_id = fields.Many2one(
         "account.account.tag",
-        domain="[('applicability', '=', 'taxes'),('jurisdiction_code', '!=', False)]",
+        domain="[('applicability', '=', 'taxes')]",
         required=True,
     )
 

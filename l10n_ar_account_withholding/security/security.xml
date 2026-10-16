@@ -10,7 +10,6 @@
 
     <record id="partner_tax_withholding_amount_type" model="res.groups">
         <field name="name">Allow to choose base amount type for withholdings on partners</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
 </odoo>
